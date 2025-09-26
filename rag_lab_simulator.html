@@ -311,17 +311,17 @@
 
             <div class="step-card" data-step="2">
                 <div class="step-number">2</div>
-                <h3 class="step-title">Initialize Vector Database</h3>
-                <p class="step-description">Set up the vector database to store document embeddings for semantic search.</p>
+                <h3 class="step-title">Setup Oracle Database 23ai Free</h3>
+                <p class="step-description">Deploy Oracle Database 23ai Free container with built-in AI Vector Search capabilities for RAG workloads.</p>
                 <div class="terminal" id="terminal-2" style="display: none;"></div>
-                <button class="action-button" onclick="executeStep(2)" disabled>Setup Vector DB</button>
+                <button class="action-button" onclick="executeStep(2)" disabled>Setup Oracle 23ai</button>
                 <div class="step-progress"><div class="progress-fill"></div></div>
             </div>
 
             <div class="step-card" data-step="3">
                 <div class="step-number">3</div>
                 <h3 class="step-title">Chunking Strategy & Embedding</h3>
-                <p class="step-description">Break documents into chunks and convert them into vector embeddings.</p>
+                <p class="step-description">Break documents into chunks and convert them into vector embeddings using Oracle's VECTOR data type.</p>
                 <div class="vector-viz" id="vector-viz" style="display: none;"></div>
                 <div class="terminal" id="terminal-3" style="display: none;"></div>
                 <button class="action-button" onclick="executeStep(3)" disabled>Process Documents</button>
@@ -331,17 +331,17 @@
             <div class="step-card" data-step="4">
                 <div class="step-number">4</div>
                 <h3 class="step-title">Feed AI Brain</h3>
-                <p class="step-description">Load the processed knowledge base into the AI system for retrieval.</p>
+                <p class="step-description">Load the processed knowledge base into Oracle's AI Vector Search system for retrieval.</p>
                 <div class="knowledge-base" id="knowledge-base" style="display: none;"></div>
                 <div class="terminal" id="terminal-4" style="display: none;"></div>
-                <button class="action-button" onclick="executeStep(4)" disabled>Load Knowledge Base</button>
+                <button class="action-button" onclick="executeStep(4)" disabled">Load Knowledge Base</button>
                 <div class="step-progress"><div class="progress-fill"></div></div>
             </div>
 
             <div class="step-card" data-step="5">
                 <div class="step-number">5</div>
                 <h3 class="step-title">Semantic Search</h3>
-                <p class="step-description">Test the semantic search capabilities of the vector database.</p>
+                <p class="step-description">Test the semantic search capabilities using Oracle AI Vector Search and distance functions.</p>
                 <div class="terminal" id="terminal-5" style="display: none;"></div>
                 <button class="action-button" onclick="executeStep(5)" disabled>Test Search</button>
                 <div class="step-progress"><div class="progress-fill"></div></div>
@@ -350,7 +350,7 @@
             <div class="step-card" data-step="6">
                 <div class="step-number">6</div>
                 <h3 class="step-title">Launch Web Interface</h3>
-                <p class="step-description">Deploy the RAG chatbot interface for interactive conversations.</p>
+                <p class="step-description">Deploy the RAG chatbot interface powered by Oracle Database 23ai for interactive conversations.</p>
                 <div class="terminal" id="terminal-6" style="display: none;"></div>
                 <button class="action-button" onclick="executeStep(6)" disabled>Launch Chatbot</button>
                 <div class="step-progress"><div class="progress-fill"></div></div>
@@ -359,12 +359,12 @@
 
         <div class="chatbot-container" id="chatbot-container">
             <div class="chat-header">
-                <h2>🤖 RAG-Powered Assistant</h2>
-                <p>Ask questions about the knowledge base!</p>
+                <h2>🤖 Oracle RAG-Powered Assistant</h2>
+                <p>Ask questions about the knowledge base stored in Oracle Database 23ai!</p>
             </div>
             <div class="chat-messages" id="chat-messages">
                 <div class="message bot-message">
-                    Hello! I'm your RAG-powered assistant. I have access to a knowledge base about artificial intelligence, machine learning, and related topics. What would you like to know?
+                    Hello! I'm your Oracle Database 23ai RAG-powered assistant. I have access to a knowledge base with built-in AI Vector Search capabilities. What would you like to know?
                 </div>
             </div>
             <div class="chat-input-container">
@@ -381,20 +381,23 @@
         const stepData = {
             1: {
                 terminal: [
-                    "$ pip install langchain chromadb openai",
-                    "✓ Installing dependencies...",
+                    "$ pip install oracledb langchain python-dotenv",
+                    "✓ Installing Oracle Database dependencies...",
                     "✓ Setting up virtual environment",
-                    "✓ Configuring API keys",
-                    "✓ Environment ready!"
+                    "✓ Configuring connection parameters",
+                    "✓ Environment ready for Oracle Database 23ai!"
                 ]
             },
             2: {
                 terminal: [
-                    "$ python -c 'import chromadb; client = chromadb.Client()'",
-                    "✓ Initializing ChromaDB vector database",
-                    "✓ Creating collection: 'knowledge_base'",
-                    "✓ Setting embedding function: OpenAI",
-                    "✓ Vector database ready!"
+                    "$ docker pull container-registry.oracle.com/database/free:latest",
+                    "✓ Pulling Oracle Database 23ai Free container (4.5GB)",
+                    "$ docker run -d --name oracle-23ai -p 1521:1521 -p 5500:5500 \\",
+                    "  -e ORACLE_PWD=Welcome123 -e ORACLE_CHARACTERSET=AL32UTF8 \\",
+                    "  container-registry.oracle.com/database/free:latest",
+                    "✓ Starting Oracle Database 23ai Free container",
+                    "✓ AI Vector Search capabilities enabled",
+                    "✓ Database ready at localhost:1521/FREEPDB1"
                 ]
             },
             3: {
@@ -402,39 +405,41 @@
                     "$ python chunk_documents.py",
                     "✓ Loading documents from ./data/",
                     "✓ Splitting into 500-token chunks with 50 overlap",
-                    "✓ Generating embeddings using text-embedding-ada-002",
-                    "✓ Created 1,247 document chunks",
-                    "✓ Embeddings generated successfully!"
+                    "✓ Connecting to Oracle Database 23ai",
+                    "✓ Using Oracle's VECTOR_EMBEDDING function",
+                    "✓ Created 1,247 document chunks with embeddings",
+                    "✓ Vectors stored in native VECTOR data type"
                 ]
             },
             4: {
                 terminal: [
                     "$ python load_knowledge_base.py",
-                    "✓ Connecting to vector database",
-                    "✓ Uploading document chunks and embeddings",
-                    "✓ Creating semantic index",
-                    "✓ Knowledge base loaded with 1,247 chunks",
-                    "✓ AI brain fed successfully!"
+                    "✓ Connecting to Oracle Database 23ai",
+                    "✓ Creating vector-enabled tables",
+                    "✓ Inserting document chunks with VECTOR embeddings",
+                    "✓ Creating HNSW vector index for fast similarity search",
+                    "✓ Knowledge base loaded with 1,247 chunks in Oracle 23ai",
+                    "✓ AI Vector Search ready for semantic queries!"
                 ]
             },
             5: {
                 terminal: [
                     "$ python test_search.py --query 'machine learning algorithms'",
-                    "✓ Query embedding generated",
-                    "✓ Searching vector space...",
-                    "✓ Found 5 relevant chunks (similarity > 0.8)",
+                    "✓ Executing Oracle AI Vector Search query",
+                    "✓ Using VECTOR_DISTANCE function for similarity",
+                    "✓ Found 5 relevant chunks (distance < 0.8)",
                     "✓ Top result: 'Introduction to Neural Networks'",
-                    "✓ Semantic search working perfectly!"
+                    "✓ Oracle AI Vector Search working perfectly!"
                 ]
             },
             6: {
                 terminal: [
                     "$ python app.py",
                     "✓ Starting Flask application",
-                    "✓ Loading RAG pipeline",
-                    "✓ Connecting to vector database",
+                    "✓ Loading RAG pipeline with Oracle Database 23ai",
+                    "✓ Connecting to AI Vector Search",
                     "✓ Web interface ready at http://localhost:5000",
-                    "✓ RAG chatbot deployed successfully!"
+                    "✓ Oracle-powered RAG chatbot deployed successfully!"
                 ]
             }
         };
@@ -452,15 +457,17 @@
         ];
 
         const ragResponses = {
-            "what is machine learning": "Based on the knowledge base, machine learning is a subset of artificial intelligence that enables computer systems to automatically learn and improve from experience without being explicitly programmed. It focuses on developing algorithms that can access data and learn patterns to make predictions or decisions.",
+            "what is machine learning": "Based on the Oracle Database 23ai knowledge base, machine learning is a subset of artificial intelligence that enables computer systems to automatically learn and improve from experience without being explicitly programmed. Our AI Vector Search found relevant context about ML algorithms and their applications in enterprise scenarios.",
             
-            "explain neural networks": "According to the documentation, neural networks are computing systems inspired by biological neural networks. They consist of interconnected nodes (neurons) organized in layers that process information by passing signals through weighted connections, allowing them to recognize patterns and solve complex problems.",
+            "explain neural networks": "According to the documentation stored in Oracle Database 23ai, neural networks are computing systems inspired by biological neural networks. They consist of interconnected nodes organized in layers that process information through weighted connections, enabling pattern recognition and complex problem solving.",
             
-            "what is deep learning": "The knowledge base describes deep learning as a subset of machine learning that uses neural networks with multiple layers (hence 'deep') to progressively extract higher-level features from raw input. Each layer transforms the data representation, enabling the network to learn complex patterns.",
+            "what is deep learning": "The Oracle AI Vector Search results describe deep learning as a subset of machine learning using neural networks with multiple layers to progressively extract higher-level features from raw input. Each layer transforms data representation, enabling learning of complex patterns.",
             
-            "tell me about ai": "From the knowledge base: Artificial Intelligence (AI) refers to the simulation of human intelligence in machines programmed to think and learn. It encompasses various subfields including machine learning, natural language processing, computer vision, and robotics.",
+            "tell me about ai": "From the Oracle Database 23ai knowledge base: Artificial Intelligence refers to simulation of human intelligence in machines programmed to think and learn. The database's AI Vector Search capabilities help us find relevant information about AI subfields including machine learning, NLP, computer vision, and robotics.",
             
-            "default": "I found relevant information in the knowledge base. Based on the retrieved context, I can provide insights about various AI and ML topics including algorithms, neural networks, deep learning, and applications. Could you be more specific about what aspect interests you?"
+            "oracle database": "Oracle Database 23ai is a converged database with built-in AI capabilities including AI Vector Search. It allows storing vector embeddings alongside business data, enabling semantic search and RAG applications without moving data to separate vector databases.",
+            
+            "default": "I found relevant information using Oracle Database 23ai's AI Vector Search capabilities. The native VECTOR data type and semantic search functions help me retrieve contextually relevant information about AI, ML, and database topics. What specific aspect interests you?"
         };
 
         function executeStep(step) {
