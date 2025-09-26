@@ -211,4 +211,4 @@ See the [LICENSE](LICENSE) file for the boring legal text.
 
 **Built with ❤️, excessive amounts of caffeine, Oracle Database 23ai Free, and the naive belief that education should be fun AND enterprise-ready.**
 
-*P.S. - If you actually read this entire README, you deserve a cookie and probably a job working with Oracle databases. We don't have cookies to give, but you definitely deserve one.*
+*P.S. - If you actually read this entire README, you deserve a cookie. We don't have cookies to give, but you definitely deserve one.*
