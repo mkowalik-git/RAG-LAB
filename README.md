@@ -4,7 +4,8 @@
 
 An interactive, educational web application that demonstrates the complete Retrieval-Augmented Generation (RAG) pipeline through a simulated laboratory environment. No lab coats required, but we won't judge if you wear one.
 
-<img width="1442" height="871" alt="image" src="https://github.com/user-attachments/assets/a448e737-24e3-40e7-9db9-eae95543e028" />
+<img width="1416" height="927" alt="image" src="https://github.com/user-attachments/assets/d749291d-025f-42d0-9749-5ee500ef71c0" />
+
 
 
 ## 🤔 What's This All About?
