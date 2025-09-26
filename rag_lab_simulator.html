@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAG Lab Environment</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 50%, #2d2d5f 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: auto;
+        }
+
+        .lab-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .lab-header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .lab-title {
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #00f5ff, #00d4aa);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .lab-subtitle {
+            font-size: 1.2em;
+            color: #b0b0b0;
+        }
+
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .step-card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .step-card:hover {
+            transform: translateY(-5px);
+            border-color: #00f5ff;
+            box-shadow: 0 10px 30px rgba(0, 245, 255, 0.3);
+        }
+
+        .step-card.active {
+            border-color: #00d4aa;
+            background: rgba(0, 212, 170, 0.1);
+        }
+
+        .step-card.completed {
+            border-color: #4caf50;
+            background: rgba(76, 175, 80, 0.1);
+        }
+
+        .step-number {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: linear-gradient(45deg, #00f5ff, #00d4aa);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            color: #000;
+        }
+
+        .step-title {
+            font-size: 1.3em;
+            margin-bottom: 10px;
+            color: #00f5ff;
+        }
+
+        .step-description {
+            color: #b0b0b0;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .step-progress {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00f5ff, #00d4aa);
+            width: 0%;
+            transition: width 1s ease;
+        }
+
+        .terminal {
+            background: #1a1a1a;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #00ff00;
+            margin: 15px 0;
+            border: 1px solid #333;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .terminal-line {
+            margin: 5px 0;
+        }
+
+        .chatbot-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: none;
+        }
+
+        .chat-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .chat-messages {
+            height: 300px;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            border-radius: 10px;
+            max-width: 80%;
+        }
+
+        .user-message {
+            background: linear-gradient(45deg, #00f5ff, #00d4aa);
+            color: #000;
+            margin-left: auto;
+        }
+
+        .bot-message {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .chat-input-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .chat-input::placeholder {
+            color: #888;
+        }
+
+        .send-button {
+            padding: 15px 30px;
+            background: linear-gradient(45deg, #00f5ff, #00d4aa);
+            color: #000;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+
+        .send-button:hover {
+            transform: scale(1.05);
+        }
+
+        .action-button {
+            background: linear-gradient(45deg, #00f5ff, #00d4aa);
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s;
+            margin-top: 10px;
+        }
+
+        .action-button:hover {
+            transform: scale(1.05);
+        }
+
+        .action-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .vector-viz {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 5px;
+            margin: 15px 0;
+        }
+
+        .vector-item {
+            height: 20px;
+            background: linear-gradient(45deg, #00f5ff, #00d4aa);
+            border-radius: 3px;
+            opacity: 0;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .knowledge-base {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .document-chunk {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            border-left: 3px solid #00f5ff;
+        }
+
+        @media (max-width: 768px) {
+            .steps-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .lab-title {
+                font-size: 2em;
+            }
+            
+            .knowledge-base {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="lab-container">
+        <div class="lab-header">
+            <h1 class="lab-title">🧬 RAG Laboratory</h1>
+            <p class="lab-subtitle">Retrieval-Augmented Generation Training Environment</p>
+        </div>
+
+        <div class="steps-container">
+            <div class="step-card" data-step="1">
+                <div class="step-number">1</div>
+                <h3 class="step-title">Setup Development Environment</h3>
+                <p class="step-description">Initialize the RAG system with required dependencies and configurations.</p>
+                <div class="terminal" id="terminal-1" style="display: none;"></div>
+                <button class="action-button" onclick="executeStep(1)">Initialize Environment</button>
+                <div class="step-progress"><div class="progress-fill"></div></div>
+            </div>
+
+            <div class="step-card" data-step="2">
+                <div class="step-number">2</div>
+                <h3 class="step-title">Initialize Vector Database</h3>
+                <p class="step-description">Set up the vector database to store document embeddings for semantic search.</p>
+                <div class="terminal" id="terminal-2" style="display: none;"></div>
+                <button class="action-button" onclick="executeStep(2)" disabled>Setup Vector DB</button>
+                <div class="step-progress"><div class="progress-fill"></div></div>
+            </div>
+
+            <div class="step-card" data-step="3">
+                <div class="step-number">3</div>
+                <h3 class="step-title">Chunking Strategy & Embedding</h3>
+                <p class="step-description">Break documents into chunks and convert them into vector embeddings.</p>
+                <div class="vector-viz" id="vector-viz" style="display: none;"></div>
+                <div class="terminal" id="terminal-3" style="display: none;"></div>
+                <button class="action-button" onclick="executeStep(3)" disabled>Process Documents</button>
+                <div class="step-progress"><div class="progress-fill"></div></div>
+            </div>
+
+            <div class="step-card" data-step="4">
+                <div class="step-number">4</div>
+                <h3 class="step-title">Feed AI Brain</h3>
+                <p class="step-description">Load the processed knowledge base into the AI system for retrieval.</p>
+                <div class="knowledge-base" id="knowledge-base" style="display: none;"></div>
+                <div class="terminal" id="terminal-4" style="display: none;"></div>
+                <button class="action-button" onclick="executeStep(4)" disabled>Load Knowledge Base</button>
+                <div class="step-progress"><div class="progress-fill"></div></div>
+            </div>
+
+            <div class="step-card" data-step="5">
+                <div class="step-number">5</div>
+                <h3 class="step-title">Semantic Search</h3>
+                <p class="step-description">Test the semantic search capabilities of the vector database.</p>
+                <div class="terminal" id="terminal-5" style="display: none;"></div>
+                <button class="action-button" onclick="executeStep(5)" disabled>Test Search</button>
+                <div class="step-progress"><div class="progress-fill"></div></div>
+            </div>
+
+            <div class="step-card" data-step="6">
+                <div class="step-number">6</div>
+                <h3 class="step-title">Launch Web Interface</h3>
+                <p class="step-description">Deploy the RAG chatbot interface for interactive conversations.</p>
+                <div class="terminal" id="terminal-6" style="display: none;"></div>
+                <button class="action-button" onclick="executeStep(6)" disabled>Launch Chatbot</button>
+                <div class="step-progress"><div class="progress-fill"></div></div>
+            </div>
+        </div>
+
+        <div class="chatbot-container" id="chatbot-container">
+            <div class="chat-header">
+                <h2>🤖 RAG-Powered Assistant</h2>
+                <p>Ask questions about the knowledge base!</p>
+            </div>
+            <div class="chat-messages" id="chat-messages">
+                <div class="message bot-message">
+                    Hello! I'm your RAG-powered assistant. I have access to a knowledge base about artificial intelligence, machine learning, and related topics. What would you like to know?
+                </div>
+            </div>
+            <div class="chat-input-container">
+                <input type="text" class="chat-input" id="chat-input" placeholder="Ask me anything about AI and ML...">
+                <button class="send-button" onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 0;
+        let completedSteps = new Set();
+
+        const stepData = {
+            1: {
+                terminal: [
+                    "$ pip install langchain chromadb openai",
+                    "✓ Installing dependencies...",
+                    "✓ Setting up virtual environment",
+                    "✓ Configuring API keys",
+                    "✓ Environment ready!"
+                ]
+            },
+            2: {
+                terminal: [
+                    "$ python -c 'import chromadb; client = chromadb.Client()'",
+                    "✓ Initializing ChromaDB vector database",
+                    "✓ Creating collection: 'knowledge_base'",
+                    "✓ Setting embedding function: OpenAI",
+                    "✓ Vector database ready!"
+                ]
+            },
+            3: {
+                terminal: [
+                    "$ python chunk_documents.py",
+                    "✓ Loading documents from ./data/",
+                    "✓ Splitting into 500-token chunks with 50 overlap",
+                    "✓ Generating embeddings using text-embedding-ada-002",
+                    "✓ Created 1,247 document chunks",
+                    "✓ Embeddings generated successfully!"
+                ]
+            },
+            4: {
+                terminal: [
+                    "$ python load_knowledge_base.py",
+                    "✓ Connecting to vector database",
+                    "✓ Uploading document chunks and embeddings",
+                    "✓ Creating semantic index",
+                    "✓ Knowledge base loaded with 1,247 chunks",
+                    "✓ AI brain fed successfully!"
+                ]
+            },
+            5: {
+                terminal: [
+                    "$ python test_search.py --query 'machine learning algorithms'",
+                    "✓ Query embedding generated",
+                    "✓ Searching vector space...",
+                    "✓ Found 5 relevant chunks (similarity > 0.8)",
+                    "✓ Top result: 'Introduction to Neural Networks'",
+                    "✓ Semantic search working perfectly!"
+                ]
+            },
+            6: {
+                terminal: [
+                    "$ python app.py",
+                    "✓ Starting Flask application",
+                    "✓ Loading RAG pipeline",
+                    "✓ Connecting to vector database",
+                    "✓ Web interface ready at http://localhost:5000",
+                    "✓ RAG chatbot deployed successfully!"
+                ]
+            }
+        };
+
+        const knowledgeBaseChunks = [
+            "Machine Learning is a subset of AI that enables systems to learn from data...",
+            "Neural Networks are computing systems inspired by biological neural networks...",
+            "Deep Learning uses multiple layers to progressively extract features...",
+            "Natural Language Processing focuses on interaction between computers and humans...",
+            "Computer Vision enables machines to interpret visual information...",
+            "Reinforcement Learning is learning through interaction with environment...",
+            "Supervised Learning uses labeled training data to make predictions...",
+            "Unsupervised Learning finds patterns in data without labels...",
+            "Transfer Learning leverages pre-trained models for new tasks..."
+        ];
+
+        const ragResponses = {
+            "what is machine learning": "Based on the knowledge base, machine learning is a subset of artificial intelligence that enables computer systems to automatically learn and improve from experience without being explicitly programmed. It focuses on developing algorithms that can access data and learn patterns to make predictions or decisions.",
+            
+            "explain neural networks": "According to the documentation, neural networks are computing systems inspired by biological neural networks. They consist of interconnected nodes (neurons) organized in layers that process information by passing signals through weighted connections, allowing them to recognize patterns and solve complex problems.",
+            
+            "what is deep learning": "The knowledge base describes deep learning as a subset of machine learning that uses neural networks with multiple layers (hence 'deep') to progressively extract higher-level features from raw input. Each layer transforms the data representation, enabling the network to learn complex patterns.",
+            
+            "tell me about ai": "From the knowledge base: Artificial Intelligence (AI) refers to the simulation of human intelligence in machines programmed to think and learn. It encompasses various subfields including machine learning, natural language processing, computer vision, and robotics.",
+            
+            "default": "I found relevant information in the knowledge base. Based on the retrieved context, I can provide insights about various AI and ML topics including algorithms, neural networks, deep learning, and applications. Could you be more specific about what aspect interests you?"
+        };
+
+        function executeStep(step) {
+            if (step <= currentStep + 1) {
+                currentStep = Math.max(currentStep, step);
+                completedSteps.add(step);
+                
+                const card = document.querySelector(`[data-step="${step}"]`);
+                const terminal = document.getElementById(`terminal-${step}`);
+                const progress = card.querySelector('.progress-fill');
+                
+                card.classList.add('active');
+                terminal.style.display = 'block';
+                
+                // Animate terminal output
+                const lines = stepData[step].terminal;
+                lines.forEach((line, index) => {
+                    setTimeout(() => {
+                        const terminalLine = document.createElement('div');
+                        terminalLine.className = 'terminal-line';
+                        terminalLine.textContent = line;
+                        terminal.appendChild(terminalLine);
+                        terminal.scrollTop = terminal.scrollHeight;
+                    }, index * 800);
+                });
+                
+                // Animate progress bar
+                setTimeout(() => {
+                    progress.style.width = '100%';
+                }, lines.length * 800);
+                
+                // Mark as completed and enable next step
+                setTimeout(() => {
+                    card.classList.remove('active');
+                    card.classList.add('completed');
+                    
+                    if (step < 6) {
+                        const nextButton = document.querySelector(`[data-step="${step + 1}"] .action-button`);
+                        nextButton.disabled = false;
+                    }
+                    
+                    // Special animations for specific steps
+                    if (step === 3) {
+                        showVectorVisualization();
+                    } else if (step === 4) {
+                        showKnowledgeBase();
+                    } else if (step === 6) {
+                        showChatbot();
+                    }
+                }, lines.length * 800 + 1000);
+            }
+        }
+
+        function showVectorVisualization() {
+            const viz = document.getElementById('vector-viz');
+            viz.style.display = 'grid';
+            
+            for (let i = 0; i < 32; i++) {
+                setTimeout(() => {
+                    const item = document.createElement('div');
+                    item.className = 'vector-item';
+                    item.style.animationDelay = `${i * 0.1}s`;
+                    viz.appendChild(item);
+                }, i * 100);
+            }
+        }
+
+        function showKnowledgeBase() {
+            const kb = document.getElementById('knowledge-base');
+            kb.style.display = 'grid';
+            
+            knowledgeBaseChunks.forEach((chunk, index) => {
+                setTimeout(() => {
+                    const chunkDiv = document.createElement('div');
+                    chunkDiv.className = 'document-chunk';
+                    chunkDiv.textContent = chunk;
+                    kb.appendChild(chunkDiv);
+                }, index * 200);
+            });
+        }
+
+        function showChatbot() {
+            setTimeout(() => {
+                document.getElementById('chatbot-container').style.display = 'block';
+                document.getElementById('chatbot-container').scrollIntoView({ 
+                    behavior: 'smooth' 
+                });
+            }, 1000);
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const messages = document.getElementById('chat-messages');
+            const message = input.value.trim();
+            
+            if (message) {
+                // Add user message
+                const userMsg = document.createElement('div');
+                userMsg.className = 'message user-message';
+                userMsg.textContent = message;
+                messages.appendChild(userMsg);
+                
+                // Clear input
+                input.value = '';
+                
+                // Simulate thinking
+                setTimeout(() => {
+                    const botMsg = document.createElement('div');
+                    botMsg.className = 'message bot-message';
+                    
+                    // Simple response matching
+                    const lowerMessage = message.toLowerCase();
+                    let response = ragResponses.default;
+                    
+                    for (const [key, value] of Object.entries(ragResponses)) {
+                        if (key !== 'default' && lowerMessage.includes(key)) {
+                            response = value;
+                            break;
+                        }
+                    }
+                    
+                    botMsg.textContent = response;
+                    messages.appendChild(botMsg);
+                    messages.scrollTop = messages.scrollHeight;
+                }, 1500);
+            }
+        }
+
+        // Allow Enter key to send messages
+        document.getElementById('chat-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Initialize first step as available
+        document.querySelector('[data-step="1"] .action-button').disabled = false;
+    </script>
+</body>
+</html>
